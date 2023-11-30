@@ -1,9 +1,15 @@
 import subprocess
 import logging
+import os
+from dotenv import load_dotenv
+
+load_dotenv('.env')
 
 logging.basicConfig(filename='user_detection.log', level=logging.DEBUG, format='%(asctime)s %(message)s')
 
-devices = [{"name":"pat's phone", "mac":"62:AA:B2:99:A3:C5"}]
+phone = os.getenv('phone')
+
+devices = [{"name":"pat's phone", "mac": phone}]
 
 # Returns the list of known devices found on the network
 def find_devices():

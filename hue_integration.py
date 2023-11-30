@@ -1,7 +1,12 @@
 from huesdk import Hue
-import creds
+import os
+from dotenv import load_dotenv
 
-hue = Hue(bridge_ip='192.168.1.1', username=creds.hueUsername)
+load_dotenv('.env')
+
+hueUsername = os.getenv('hueUsername')
+
+hue = Hue(bridge_ip='192.168.1.1', username=hueUsername)
 light = hue.get_light(name="C.C.A Lamp")
 
 def hueBlue():

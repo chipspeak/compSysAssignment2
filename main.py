@@ -1,8 +1,6 @@
 import requests
 import subprocess
-import creds
 import threading
-import sys
 import os
 import subprocess
 import logging
@@ -11,8 +9,14 @@ import hue_integration
 from huesdk import Hue
 from datetime import datetime
 from sense_hat import SenseHat
+from dotenv import load_dotenv
+import os
+
+load_dotenv('.env')
 
 logging.basicConfig(filename='user_detection.log', level=logging.DEBUG, format='%(asctime)s %(message)s')
+
+apiKey = os.getenv('apiKey')
 
 origin = 'Maynooth+Park,Maynooth,Kildare,Ireland'
 destination = 'Bray+Promenade,Bray,Wicklow,Ireland'
@@ -28,7 +32,7 @@ blue = (0,0,200)
 # array that the difference between actual departure time and desired departure time is passed. The average of the array contents will be added to timeInSeconds and duration in traffic.
 averageDelay = []
 
-apiUrl = f'https://maps.googleapis.com/maps/api/distancematrix/json?origins={origin}&destinations={destination}&key={creds.apiKey}&departure_time=now'
+apiUrl = f'https://maps.googleapis.com/maps/api/distancematrix/json?origins={origin}&destinations={destination}&key={apiKey}&departure_time=now'
 
 while userPresent:
     try:
