@@ -21,3 +21,5 @@ def hueGreen():
     light.set_color(hue=21845)
 def hueRed():
     light.set_color(hue=65535)
+def hueYellow():
+    light.set_color(hue=12177)

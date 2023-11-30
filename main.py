@@ -1,14 +1,12 @@
 #imports
 import requests
-import subprocess
-import threading
 import os
-import subprocess
 import logging
-import BlynkLib
 import user_detection
 import hue_integration
 import blynk_integration
+import time_checks
+from datetime import time
 from time import sleep
 from huesdk import Hue
 from datetime import datetime
@@ -21,18 +19,22 @@ load_dotenv('.env')
 
 logging.basicConfig(filename='user_detection.log', level=logging.DEBUG, format='%(asctime)s %(message)s')
 
+# retrieving api key from .env
 apiKey = os.getenv('apiKey')
 
 #declarations for use with api call and user checking functionality
 origin = 'Maynooth+Park,Maynooth,Kildare,Ireland'
 destination = 'Bray+Promenade,Bray,Wicklow,Ireland'
 userPresent = True
+startHour = 9
+startMinute = 0
 
 # sensehat variables
 sense = SenseHat()
 sense.clear()
 green = (0, 255, 0)
 red = (255,0,0)
+yellow = (255, 255, 0)
 blue = (0,0,200)
 
 # array that the difference between actual departure time and desired departure time is passed. The average of the array contents will be added to timeInSeconds and duration in traffic.
@@ -73,20 +75,25 @@ while userPresent:
             estimatedArrivalDate = datetime.utcfromtimestamp(estimatedArrivalTimeInSeconds)
             hoursUTC = estimatedArrivalDate.hour
             minutesUTC = estimatedArrivalDate.minute
-            ETA = f'Estimated time of arrival: {hoursUTC}:{minutesUTC:02}'
+            ETA = time(hour=hoursUTC, minute=minutesUTC)
             #blynk functions are called and ETA is passed as an argument
+            
             blynk_integration.blynk.run()
-            blynk_integration.blynk.virtual_write(1, ETA) #ADD THIS LINE!!!
+            blynk_integration.blynk.virtual_write(1, f'ETA: {ETA.hour}:{ETA.minute:02}')
             sleep(.5)
             #conditional effecting the colour of lights and sensedisplay
-            if hoursUTC <= 11 and minutesUTC <= 32:
+            if ETA <= time_checks.optimalArrival:
                 hue_integration.hueGreen()
-                sense.show_message(f'ETA: {hoursUTC}:{minutesUTC:02}', text_colour=green)
-                print(f'ETA: {hoursUTC}:{minutesUTC:02}')
+                sense.show_message(f'ETA: {ETA.hour}:{ETA.minute:02}', text_colour=green)
+                print(f'ETA: {ETA}')
+            elif ETA > time_checks.optimalArrival and ETA <= time_checks.cuttingItClose:
+                hue_integration.hueYellow()
+                sense.show_message(f'ETA: {ETA.hour}:{ETA.minute:02}', text_colour=yellow)
+                print(f'ETA: {ETA}')
             else:
                 hue_integration.hueRed()
-                sense.show_message(f'ETA:{hoursUTC}:{minutesUTC:02}', text_colour=red)
-                print(f'ETA: {hoursUTC}:{minutesUTC:02}')
+                sense.show_message(f'ETA: {ETA.hour}:{ETA.minute:02}', text_colour=red)
+                print(f'ETA: {ETA}')
         else:
             print('Unable to retrieve distance matrix. Check your origin, destination, and API key.')
     except Exception as error:
