@@ -26,8 +26,6 @@ apiKey = os.getenv('apiKey')
 origin = 'Maynooth+Park,Maynooth,Kildare,Ireland'
 destination = 'Bray+Promenade,Bray,Wicklow,Ireland'
 userPresent = True
-startHour = 9
-startMinute = 0
 
 # sensehat variables
 sense = SenseHat()
@@ -43,19 +41,43 @@ averageDelay = []
 # api call
 apiUrl = f'https://maps.googleapis.com/maps/api/distancematrix/json?origins={origin}&destinations={destination}&key={apiKey}&departure_time=now'
 
+def statusGreen(ETA):
+    hue_integration.hueGreen()
+    sense.show_message(f'ETA: {ETA.hour}:{ETA.minute:02}', text_colour=green)
+    blynk_integration.blynk.virtual_write(2, 0)
+    print(f'ETA: {ETA}')
+
+def statusYellow(ETA):
+    hue_integration.hueYellow()
+    sense.show_message(f'ETA: {ETA.hour}:{ETA.minute:02}', text_colour=yellow)
+    blynk_integration.blynk.virtual_write(2, 1)
+    print(f'ETA: {ETA}')
+
+def statusRed(ETA):
+    hue_integration.hueRed()
+    sense.show_message(f'ETA: {ETA.hour}:{ETA.minute:02}', text_colour=red)
+    blynk_integration.blynk.virtual_write(2, 2)
+    print(f'ETA: {ETA}')
+
+def statusBlue(ETA):
+    hue_integration.hueBlue()
+    sense.show_message('ON THEIR WAY', text_colour=blue)
+    blynk_integration.blynk.virtual_write(2, 3)
+    hue_integration.hue.off()
+
 # while loop which executes upon successful detection of user on local network via mac address check
 while userPresent:
     try:
         if user_detection.find_devices():
             userPresent = True
+            # initially blynk is passed a datastream value that has no automation. Otherwise it would use the last passed value as default.
+            blynk_integration.blynk.virtual_write(2, 4)
             print("Successful connection to phone. User is yet to leave")
         else:
             # if user is not on network, departure is inferred and sensehat displays message in addition to lamp powering down
             print("No connection. User is on their way to work!")
             userPresent = False
-            hue_integration.hueBlue()
-            sense.show_message('ON THEIR WAY', text_colour=blue)
-            hue_integration.hue.off()
+            statusBlue(ETA)
             break
 
         #variables declarations re current time and then conversion to minutes and hours
@@ -68,6 +90,7 @@ while userPresent:
 
         #core conditional of programme 
         if data['status'] == 'OK':
+
             hue_integration.hue.on()
             #variables are created and seconds converted to minutes and hours from api
             durationInTraffic = data['rows'][0]['elements'][0]['duration_in_traffic']['value']
@@ -76,24 +99,17 @@ while userPresent:
             hoursUTC = estimatedArrivalDate.hour
             minutesUTC = estimatedArrivalDate.minute
             ETA = time(hour=hoursUTC, minute=minutesUTC)
-            #blynk functions are called and ETA is passed as an argument
-            
-            blynk_integration.blynk.run()
+            #blynk functions are called and ETA is passed as an argument           
+            #blynk_integration.blynk.run()
             blynk_integration.blynk.virtual_write(1, f'ETA: {ETA.hour}:{ETA.minute:02}')
             sleep(.5)
             #conditional effecting the colour of lights and sensedisplay
             if ETA <= time_checks.optimalArrival:
-                hue_integration.hueGreen()
-                sense.show_message(f'ETA: {ETA.hour}:{ETA.minute:02}', text_colour=green)
-                print(f'ETA: {ETA}')
+                statusGreen(ETA)
             elif ETA > time_checks.optimalArrival and ETA <= time_checks.cuttingItClose:
-                hue_integration.hueYellow()
-                sense.show_message(f'ETA: {ETA.hour}:{ETA.minute:02}', text_colour=yellow)
-                print(f'ETA: {ETA}')
+                statusYellow(ETA)
             else:
-                hue_integration.hueRed()
-                sense.show_message(f'ETA: {ETA.hour}:{ETA.minute:02}', text_colour=red)
-                print(f'ETA: {ETA}')
+                statusRed(ETA)
         else:
             print('Unable to retrieve distance matrix. Check your origin, destination, and API key.')
     except Exception as error:
