@@ -59,7 +59,7 @@ def statusRed(ETA):
     blynk_integration.blynk.virtual_write(2, 2)
     print(f'ETA: {ETA}')
 
-def statusBlue(ETA):
+def statusBlue():
     hue_integration.hueBlue()
     sense.show_message('ON THEIR WAY', text_colour=blue)
     blynk_integration.blynk.virtual_write(2, 3)
@@ -71,13 +71,13 @@ while userPresent:
         if user_detection.find_devices():
             userPresent = True
             # initially blynk is passed a datastream value that has no automation. Otherwise it would use the last passed value as default.
-            blynk_integration.blynk.virtual_write(2, 4)
+            #blynk_integration.blynk.virtual_write(2, 4)
             print("Successful connection to phone. User is yet to leave")
         else:
             # if user is not on network, departure is inferred and sensehat displays message in addition to lamp powering down
+            statusBlue()
             print("No connection. User is on their way to work!")
             userPresent = False
-            statusBlue(ETA)
             break
 
         #variables declarations re current time and then conversion to minutes and hours
@@ -90,7 +90,8 @@ while userPresent:
 
         #core conditional of programme 
         if data['status'] == 'OK':
-
+            blynk_integration.blynk.run()
+            blynk_integration.blynk.virtual_write(2, 4)
             hue_integration.hue.on()
             #variables are created and seconds converted to minutes and hours from api
             durationInTraffic = data['rows'][0]['elements'][0]['duration_in_traffic']['value']
@@ -100,7 +101,6 @@ while userPresent:
             minutesUTC = estimatedArrivalDate.minute
             ETA = time(hour=hoursUTC, minute=minutesUTC)
             #blynk functions are called and ETA is passed as an argument           
-            #blynk_integration.blynk.run()
             blynk_integration.blynk.virtual_write(1, f'ETA: {ETA.hour}:{ETA.minute:02}')
             sleep(.5)
             #conditional effecting the colour of lights and sensedisplay

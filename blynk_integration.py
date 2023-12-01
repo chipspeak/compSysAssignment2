@@ -24,18 +24,23 @@ def read_handler(value):
 '''
 
 # register handler for virtual pin V1 write event
+@blynk.on("V0")
+def v3_write_handler(value):
+    sleep(.5)
+
+# register handler for virtual pin V2 write event
 @blynk.on("V1")
 def v3_write_handler(value):
-    blynk.run()
-    blynk.virtual_write(1, sys.argv[1]) 
     sleep(.5)
 
 # register handler for virtual pin V2 write event
 @blynk.on("V2")
-def v3_write_handler(value):
-    blynk.run()
-    blynk.virtual_write(2, sys.argv[1]) 
+def v3_write_handler(value): 
     sleep(.5)
+
+
+
+
 
 
 
