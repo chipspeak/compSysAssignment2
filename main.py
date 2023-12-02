@@ -59,27 +59,16 @@ def statusRed(ETA):
     blynk_integration.blynk.virtual_write(2, 2)
     print(f'ETA: {ETA}')
 
-def statusBlue():
+def statusBlue(ETA):
     hue_integration.hueBlue()
     sense.show_message('ON THEIR WAY', text_colour=blue)
     blynk_integration.blynk.virtual_write(2, 3)
     hue_integration.hue.off()
+    time_checks.offsetCalculation(ETA)
 
 # while loop which executes upon successful detection of user on local network via mac address check
 while userPresent:
     try:
-        if user_detection.find_devices():
-            userPresent = True
-            # initially blynk is passed a datastream value that has no automation. Otherwise it would use the last passed value as default.
-            #blynk_integration.blynk.virtual_write(2, 4)
-            print("Successful connection to phone. User is yet to leave")
-        else:
-            # if user is not on network, departure is inferred and sensehat displays message in addition to lamp powering down
-            statusBlue()
-            print("No connection. User is on their way to work!")
-            userPresent = False
-            break
-
         #variables declarations re current time and then conversion to minutes and hours
         currentDate = datetime.now()
         timeInSeconds = (currentDate.hour * 3600) + (currentDate.minute * 60) + currentDate.second
@@ -87,7 +76,7 @@ while userPresent:
         #initialising the response and data variables 
         response = requests.get(apiUrl)
         data = response.json()
-
+        
         #core conditional of programme 
         if data['status'] == 'OK':
             blynk_integration.blynk.run()
@@ -100,17 +89,26 @@ while userPresent:
             hoursUTC = estimatedArrivalDate.hour
             minutesUTC = estimatedArrivalDate.minute
             ETA = time(hour=hoursUTC, minute=minutesUTC)
-            #blynk functions are called and ETA is passed as an argument           
-            blynk_integration.blynk.virtual_write(1, f'ETA: {ETA.hour}:{ETA.minute:02}')
-            sleep(.5)
-            #conditional effecting the colour of lights and sensedisplay
-            if ETA <= time_checks.optimalArrival:
-                statusGreen(ETA)
-            elif ETA > time_checks.optimalArrival and ETA <= time_checks.cuttingItClose:
-                statusYellow(ETA)
+            if user_detection.find_devices():
+                userPresent = True
+                print("Successful connection to phone. User is yet to leave")
+                #blynk functions are called and ETA is passed as an argument           
+                blynk_integration.blynk.virtual_write(1, f'ETA: {ETA.hour}:{ETA.minute:02}')
+                sleep(.5)
+                #conditional effecting the colour of lights and sensedisplay
+                if ETA <= time_checks.optimalArrival:
+                    statusGreen(ETA)
+                elif ETA > time_checks.optimalArrival and ETA <= time_checks.cuttingItClose:
+                    statusYellow(ETA)
+                else:
+                    statusRed(ETA)
+            # if user is not on network, departure is inferred and sensehat displays message in addition to lamp powering down
             else:
-                statusRed(ETA)
+                print("No connection. User is on their way to work!")
+                userPresent = False
+                statusBlue(ETA)
+                break
         else:
             print('Unable to retrieve distance matrix. Check your origin, destination, and API key.')
     except Exception as error:
-        print('Error fetching distance matrix:', str(error))
+        print('Error:', str(error))

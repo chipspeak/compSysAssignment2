@@ -40,8 +40,3 @@ def v3_write_handler(value):
 
 
 
-
-
-
-
-
