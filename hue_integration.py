@@ -15,6 +15,9 @@ hue = Hue(bridge_ip='192.168.1.1', username=hueUsername)
 light = hue.get_light(name="C.C.A Lamp")
 
 # functions to set the light to specific colours
+def hueDefault():
+    light.set_brightness(100)
+    light.set_color(hexa="#F6E7D2")
 def hueBlue():
     light.set_brightness(150)
     light.set_color(hexa="#0000FF")

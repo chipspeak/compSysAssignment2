@@ -13,16 +13,6 @@ blynkAuth = os.getenv('blynkAuth')
 # initialize Blynk
 blynk = BlynkLib.Blynk(blynkAuth)
 
-'''
-@blynk.on("V0")
-def read_handler(value):
-    blynkTime = int(value[0])
-    startTime = datetime.utcfromtimestamp(blynkTime)
-    print(f"User start time: {startTime.hour}:{startTime.minute}")
-    blynk.run()
-    sleep(.5)
-'''
-
 # register handler for virtual pin V1 write event
 @blynk.on("V0")
 def v3_write_handler(value):

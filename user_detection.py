@@ -14,7 +14,7 @@ logging.basicConfig(filename='user_detection.log', level=logging.DEBUG, format='
 phone = os.getenv('phone')
 
 # intialising devices array
-devices = [{"name":"pat's phone", "mac": phone}]
+devices = [{"name":"user's phone", "mac": phone}]
 
 # Returns the list of known devices found on the network
 def find_devices():
@@ -32,10 +32,3 @@ def find_devices():
         else:
             logging.info(dev["name"] + " device is NOT present")
     return(devices_found)
-
-# Main program (prints the return of arp_scan )
-def main():
-    print(find_devices())
-
-if __name__ == "__main__":
-    main()

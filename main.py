@@ -63,6 +63,7 @@ def statusBlue(ETA):
     hue_integration.hueBlue()
     sense.show_message('ON THEIR WAY', text_colour=blue)
     blynk_integration.blynk.virtual_write(2, 3)
+    hue_integration.hueDefault()
     hue_integration.hue.off()
     time_checks.offsetCalculation(ETA)
 
@@ -77,7 +78,7 @@ while userPresent:
         response = requests.get(apiUrl)
         data = response.json()
         
-        #core conditional of programme 
+        #core conditional of application 
         if data['status'] == 'OK':
             blynk_integration.blynk.run()
             blynk_integration.blynk.virtual_write(2, 4)
