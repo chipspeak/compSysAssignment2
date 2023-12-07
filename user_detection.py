@@ -24,7 +24,7 @@ def find_devices():
     devices_found=[]
     # for loop iterating through the devices array
     for dev in devices:
-        #conditional checking for a match within the loop   
+        # conditional checking for a match within the loop   
         if dev["mac"].lower() in str(output).lower():
             logging.info(dev["name"] + " device is present")
             # upon match, devices_found array is appended with the matching entry

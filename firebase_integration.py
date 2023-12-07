@@ -1,3 +1,4 @@
+# imports
 import firebase_admin
 from firebase_admin import credentials, firestore, storage, db
 import os
@@ -14,9 +15,6 @@ firebase_admin.initialize_app(cred,
 ref = db.reference('/')
 home_ref = ref.child('file')
 
-currentTime = datetime.now()
-formattedTime = currentTime.strftime("%Y-%m-%d %H:%M:%S")
-
 '''
 def store_file(fileLoc):
     filename=os.path.basename(fileLoc)
@@ -26,20 +24,12 @@ def store_file(fileLoc):
     blob.upload_from_filename(outfile)
 '''
 
-def push_db(ETA, currentTime, startTime, journeyStatus):
+def push_db(currentDate, currentTime, ETA, startTime, journeyStatus):
   # Push file reference to image in Realtime DB
   home_ref.push({
-      'ETA': ETA,
+      'Date': currentDate,
       'Departure Time': currentTime,
+      'ETA': ETA,
       'Start Time': startTime,
       'Journey Status': journeyStatus
       })
-
-if __name__ == "__main__":
-    '''
-    f = open("./test.txt", "w")
-    f.write("a demo upload file to test Firebase Storage")
-    f.close()
-    store_file('./test.txt')
-    '''
-    push_db('16:45', str(formattedTime), '17:00', 'Arriving Early')

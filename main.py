@@ -1,4 +1,4 @@
-#imports
+# imports
 import requests
 import os
 import logging
@@ -16,8 +16,6 @@ import os
 
 # loading contents of .env
 load_dotenv('.env')
-
-logging.basicConfig(filename='user_detection.log', level=logging.DEBUG, format='%(asctime)s %(message)s')
 
 # retrieving api key from .env
 apiKey = os.getenv('apiKey')
@@ -41,6 +39,7 @@ averageDelay = []
 # api call
 apiUrl = f'https://maps.googleapis.com/maps/api/distancematrix/json?origins={origin}&destinations={destination}&key={apiKey}&departure_time=now'
 
+# individual function for each journey status. Each function changes the sensedisplay, hue lights and blynk messages. Status blue also writes to json/db and ends the programme
 def statusGreen(ETA):
     hue_integration.hueGreen()
     sense.show_message(f'ETA: {ETA.hour}:{ETA.minute:02}', text_colour=green)
