@@ -1,9 +1,57 @@
 [
-    {
-      "Date": "2023-12-07",
-      "offset": "0",
-      "ETA": "16:30",
-      "Start Time": "17:35",
-      "Journey Status": "Arriving early"
-    }
-  ]
+  {
+    "Date": "2023-12-07",
+    "offset": "0",
+    "ETA": "16:30",
+    "Start Time": "17:35",
+    "Journey Status": "Arriving early"
+  },
+  {
+    "Date": "2023-12-08",
+    "offset": "0",
+    "Departure": "10:10",
+    "ETA": "10:48",
+    "Start Time": "11:45",
+    "Journey Status": "Arriving early"
+  },
+  {
+    "Date": "2023-12-08",
+    "offset": "0",
+    "Departure": "14:20",
+    "ETA": "15:08",
+    "Start Time": "16:45",
+    "Journey Status": "Arriving early"
+  },
+  {
+    "Date": "2023-12-08",
+    "offset": "0",
+    "Departure": "14:22",
+    "ETA": "15:10",
+    "Start Time": "16:45",
+    "Journey Status": "Arriving early"
+  },
+  {
+    "Date": "2023-12-08",
+    "offset": "0",
+    "Departure": "14:49",
+    "ETA": "15:47",
+    "Start Time": "16:45",
+    "Journey Status": "Arriving early"
+  },
+  {
+    "Date": "2023-12-08",
+    "offset": "900",
+    "Departure": "17:25",
+    "ETA": "18:16",
+    "Start Time": "16:45",
+    "Journey Status": "Arriving late"
+  },
+  {
+    "Date": "2023-12-08",
+    "offset": "900",
+    "Departure": "17:35",
+    "ETA": "18:23",
+    "Start Time": "16:42",
+    "Journey Status": "Arriving late"
+  }
+]

@@ -1,30 +1,32 @@
 {
-    "name": "glitch-hello-node",
-    "version": "0.1.0",
-    "description": "A simple Node app built on fastify, instantly up and running. Built to be remixed on Glitch.com.",
-    "main": "server.js",
-    "scripts": {
-      "start": "node server.js"
-    },
-    "dependencies": {
-      "fastify": "^4.21.0",
-      "handlebars": "^4.7.8",
-      "@fastify/formbody": "^7.4.0",
-      "@fastify/static": "^6.10.2",
-      "@fastify/view": "^8.0.0",
-      "express": "^4.17.1",
-      "axios": "^0.24.0",
-      "firebase-admin": "^9.0.0"
-    },
-    "engines": {
-      "node": "14.x"
-    },
-    "repository": {
-      "url": "https://glitch.com/edit/#!/glitch-hello-node"
-    },
-    "license": "MIT",
-    "keywords": [
-      "node",
-      "glitch"
-    ]
-  }
+  "name": "glitch-hello-node",
+  "version": "0.1.0",
+  "description": "A simple Node app built on fastify, instantly up and running. Built to be remixed on Glitch.com.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@fastify/formbody": "^7.4.0",
+    "@fastify/static": "^6.10.2",
+    "@fastify/view": "^8.0.0",
+    "axios": "^0.24.0",
+    "bulma": "^0.9.4",
+    "express": "^4.17.1",
+    "express-handlebars": "^7.1.2",
+    "fastify": "^4.21.0",
+    "firebase-admin": "^9.0.0",
+    "handlebars": "^4.7.8"
+  },
+  "engines": {
+    "node": "14.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/glitch-hello-node"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch"
+  ]
+}

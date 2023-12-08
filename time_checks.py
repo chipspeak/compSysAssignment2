@@ -6,7 +6,7 @@ import firebase_integration
 from datetime import datetime, timedelta, time
 
 # Create a time object that will function as our work start time
-startTime = time(hour=20, minute=45)
+startTime = time(hour=16, minute=45)
 
 # create a datetime objects for current date and time and then format them for use with json/db
 currentDate = datetime.now()
@@ -38,20 +38,20 @@ def writeToJSON(formattedDate, offsetInSeconds, formattedTime, ETA, workStart, j
         try:
             # Read ('r') existing data
             with open(jsonFilename, 'r') as jsonFile:
-                existing_data = json.load(jsonFile)
+                existingData = json.load(jsonFile)
         except json.JSONDecodeError:
             # if there is an error, treat it as an empty list
-            existing_data = []
+            existingData = []
     else:
         # if the file is empty, we similarly declare an empty list
-        existing_data = []
+        existingData = []
 
     # Update existing data with the new offset from the start of the function
-    existing_data.append(journeyData)
+    existingData.append(journeyData)
 
     # Write ('w') the updated data to the JSON file
     with open(jsonFilename, 'w') as jsonFile:
-        json.dump(existing_data, jsonFile, indent=2)
+        json.dump(existingData, jsonFile, indent=2)
     
 
 # function to read the json and calculate the average offset in seconds based on the lists contents
@@ -62,24 +62,24 @@ def calculateAverageOffset():
         try:
             # read ('r') existing data without modifying it
             with open(jsonFilename, 'r') as jsonFile:
-                existing_data = json.load(jsonFile)
+                existingData = json.load(jsonFile)
 
-            # extract offsets via list comprehension where the values for the offset entry are placed in this new list
-            offsets_in_seconds = [float(entry["offset"]) for entry in existing_data]
+            # extract offsets via list comprehension where the values for the offset entry are placed in this new list (using_ rather then camel case to remain distinct from other uses)
+            offsets_in_seconds = [float(entry["offset"]) for entry in existingData]
 
-            # calculate the average offset in seconds with a conditional to account for an empty list
+            # calculate the average offset in seconds with a conditional to account for an empty list (using _as camel case used in final variable declaration)
             if offsets_in_seconds:
                 average_offset = sum(offsets_in_seconds) / len(offsets_in_seconds)
                 return average_offset
             else:
-            # 0 is returned if the list is empty
+                # 0 is returned if the list is empty
                 return 0
         # similarly if an exception is raised 0 is returned
         except json.JSONDecodeError:
-            return 0  
+            return 0
     else:
         # if there is no file matching the name provided at the start of the function return 0
-        return 0 
+        return 0
 
 # average offset set as return from calculateAverageOffset function
 averageOffset = calculateAverageOffset()

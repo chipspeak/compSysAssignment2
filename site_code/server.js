@@ -1,18 +1,23 @@
+// imports
 const express = require('express');
 const exphbs = require('express-handlebars');
 const path = require('path');
 
+// initialising the express application and its port (or 3000 if port is undefined in the .env)
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
-// Set the views directory
+// Sets the views folder for express to the 'views' in the current folder
 app.set('views', path.join(__dirname, 'views'));
 
-// Serve static files from the views folder
+// serves static files from the views folder
 app.use(express.static(path.join(__dirname, 'views')));
 
-// Initialise handlebars as the views engine
+// Initialise handlebars for rendering views and specifies extension as "handlebars" as opposed to the standard ".hbs"
+// This extension change was the only way I could get the application to work
 const hbs = exphbs.create({ extname: '.handlebars', defaultLayout: 'index', layoutsDir: path.join(__dirname, 'views') });
+
+// Handlebars is set as the view engine for express
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
@@ -31,11 +36,12 @@ app.get('/api/config', (req, res) => {
   res.json(firebaseConfig);
 });
 
-// Render index view
+// Index view ('/') is rendered using handlebars
 app.get('/', (req, res) => {
   res.render('index');
 });
-// listens for http requests
+
+// Server listens on the PORT variable specified above (3000) and prints a message to console when it's running without issue
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
