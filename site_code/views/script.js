@@ -17,9 +17,9 @@ const fetchConfig = async () => {
     const database = getDatabase(app);
     const dataRef = ref(database, 'file');
 
-    // query is set up to retrieve the 3 most entries in the DB by their Date using orderByChild
+    // query is set up to retrieve the 4 most entries in the DB by their Date using orderByChild
     // this required modification of the rules in firebase to allow for use of the Date property in ordering
-    const q = query(dataRef, orderByChild('Date'), limitToLast(3));
+    const q = query(dataRef, orderByChild('Date'), limitToLast(4));
     const snapshot = await get(q);
 
     // the dataContainer is retrieved and its contents are emptied (set to '')

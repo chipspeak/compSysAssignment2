@@ -1,0 +1,7 @@
+requests
+python-dotenv
+huesdk
+python-firebase
+BlynkLib
+sense-hat
+firebase-admin

@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 # loading contents of .env
 load_dotenv('.env')
 
-#retrieving hueUsername from .env
+# retrieving hueUsername from .env
 hueUsername = os.getenv('hueUsername')
 
 # initialising hue bridge via its local ip

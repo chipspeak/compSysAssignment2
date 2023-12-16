@@ -1,7 +1,7 @@
 # imports
+import sys
 import requests
 import os
-import logging
 import user_detection
 import hue_integration
 import blynk_integration
@@ -9,7 +9,7 @@ import time_checks
 from datetime import time
 from time import sleep
 from huesdk import Hue
-from datetime import datetime
+from datetime import datetime, timedelta
 from sense_hat import SenseHat
 from dotenv import load_dotenv
 import os
@@ -21,8 +21,8 @@ load_dotenv('.env')
 apiKey = os.getenv('apiKey')
 
 #declarations for use with api call and user checking functionality
-origin = 'Maynooth+Park,Maynooth,Kildare,Ireland'
-destination = 'Bray+Promenade,Bray,Wicklow,Ireland'
+origin = 'W23H6N1'
+destination = 'X91PD32'
 userPresent = True
 
 # sensehat variables
@@ -33,30 +33,46 @@ red = (255,0,0)
 yellow = (255, 255, 0)
 blue = (0,0,200)
 
-# array that the difference between actual departure time and desired departure time is passed. The average of the array contents will be added to timeInSeconds and duration in traffic.
+# array to which the difference between actual departure time and desired departure time is passed. The average of the array contents will be added to timeInSeconds and duration in traffic.
 averageDelay = []
 
 # api call
 apiUrl = f'https://maps.googleapis.com/maps/api/distancematrix/json?origins={origin}&destinations={destination}&key={apiKey}&departure_time=now'
 
-# individual function for each journey status. Each function changes the sensedisplay, hue lights and blynk messages. Status blue also writes to json/db and ends the programme
+'''
+individual function for each journey status. Each function changes the sense display, hue light and blynk messages. Status blue also writes to json/db and ends the programme
+in each of these functions, ETA is converted back to a full datetime object, averageOffset from time_checks is converted to a timedelta object and is then added to ETA in the new
+adjustedETA variable. The sensehat then displays this variable thus giving the user the impression that they need to leave earlier if they have an offset.
+'''
 def statusGreen(ETA):
     hue_integration.hueGreen()
-    sense.show_message(f'ETA: {ETA.hour}:{ETA.minute:02}', text_colour=green)
+    ETA = datetime.combine(datetime.today(), ETA)
+    averageOffset = timedelta(seconds=time_checks.averageOffset)
+    adjustedETA = ETA + averageOffset
+    sense.show_message(f'ETA: {adjustedETA.hour}:{adjustedETA.minute:02}', text_colour=green)        
+    blynk_integration.blynk.virtual_write(1, f'ETA: {adjustedETA.hour}:{adjustedETA.minute:02}')
     blynk_integration.blynk.virtual_write(2, 0)
-    print(f'ETA: {ETA}')
+    print(f'Actual ETA: {ETA.hour}:{ETA.minute:02}')
 
 def statusYellow(ETA):
     hue_integration.hueYellow()
-    sense.show_message(f'ETA: {ETA.hour}:{ETA.minute:02}', text_colour=yellow)
+    ETA = datetime.combine(datetime.today(), ETA)
+    averageOffset = timedelta(seconds=time_checks.averageOffset)
+    adjustedETA = ETA + averageOffset
+    sense.show_message(f'ETA: {adjustedETA.hour}:{adjustedETA.minute:02}', text_colour=yellow)
+    blynk_integration.blynk.virtual_write(1, f'ETA: {adjustedETA.hour}:{adjustedETA.minute:02}')
     blynk_integration.blynk.virtual_write(2, 1)
-    print(f'ETA: {ETA}')
+    print(f'Actual ETA: {ETA.hour}:{ETA.minute:02}')
 
 def statusRed(ETA):
     hue_integration.hueRed()
-    sense.show_message(f'ETA: {ETA.hour}:{ETA.minute:02}', text_colour=red)
+    ETA = datetime.combine(datetime.today(), ETA)
+    averageOffset = timedelta(seconds=time_checks.averageOffset)
+    adjustedETA = ETA + averageOffset
+    sense.show_message(f'ETA: {adjustedETA.hour}:{adjustedETA.minute:02}', text_colour=red)
+    blynk_integration.blynk.virtual_write(1, f'ETA: {adjustedETA.hour}:{adjustedETA.minute:02}')
     blynk_integration.blynk.virtual_write(2, 2)
-    print(f'ETA: {ETA}')
+    print(f'Actual ETA: {ETA.hour}:{ETA.minute:02}')
 
 def statusBlue(ETA):
     hue_integration.hueBlue()
@@ -69,20 +85,20 @@ def statusBlue(ETA):
 # while loop which executes upon successful detection of user on local network via mac address check
 while userPresent:
     try:
-        #variables declarations re current time and then conversion to minutes and hours
+        # variables declarations re current time and then conversion to minutes and hours
         currentDate = datetime.now()
         timeInSeconds = (currentDate.hour * 3600) + (currentDate.minute * 60) + currentDate.second
 
-        #initialising the response and data variables 
+        # initialising the response and data variables 
         response = requests.get(apiUrl)
         data = response.json()
         
-        #core conditional of application 
+        # core conditional of application 
         if data['status'] == 'OK':
             blynk_integration.blynk.run()
             blynk_integration.blynk.virtual_write(2, 4)
             hue_integration.hue.on()
-            #variables are created and seconds converted to minutes and hours from api
+            # variables are created and seconds converted to minutes and hours from api
             durationInTraffic = data['rows'][0]['elements'][0]['duration_in_traffic']['value']
             estimatedArrivalTimeInSeconds = timeInSeconds + durationInTraffic
             estimatedArrivalDate = datetime.utcfromtimestamp(estimatedArrivalTimeInSeconds)
@@ -92,10 +108,8 @@ while userPresent:
             if user_detection.find_devices():
                 userPresent = True
                 print("Successful connection to phone. User is yet to leave")
-                #blynk functions are called and ETA is passed as an argument           
-                blynk_integration.blynk.virtual_write(1, f'ETA: {ETA.hour}:{ETA.minute:02}')
                 sleep(.5)
-                #conditional effecting the colour of lights and sensedisplay
+                # conditional effecting the colour of lights and sensedisplay
                 if ETA <= time_checks.optimalArrival:
                     statusGreen(ETA)
                 elif ETA > time_checks.optimalArrival and ETA <= time_checks.cuttingItClose:

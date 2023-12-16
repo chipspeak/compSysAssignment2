@@ -6,7 +6,7 @@ import firebase_integration
 from datetime import datetime, timedelta, time
 
 # Create a time object that will function as our work start time
-startTime = time(hour=16, minute=45)
+startTime = time(hour=21, minute=45)
 
 # create a datetime objects for current date and time and then format them for use with json/db
 currentDate = datetime.now()
@@ -20,7 +20,7 @@ def writeToJSON(formattedDate, offsetInSeconds, formattedTime, ETA, workStart, j
     formattedWorkStart = workStart.strftime("%H:%M")
     formattedETA = ETA.strftime("%H:%M")
     date = formattedDate
-    # define the json data
+    # defining the json data
     journeyData = {
         "Date": str(date),
         "offset": str(offsetInSeconds),
@@ -33,7 +33,7 @@ def writeToJSON(formattedDate, offsetInSeconds, formattedTime, ETA, workStart, j
 
     firebase_integration.push_db(date, formattedTime, formattedETA, formattedWorkStart, journeyStatus)
 
-    # check for the json file
+    # checking for the json file
     if os.path.isfile(jsonFilename):
         try:
             # Read ('r') existing data
