@@ -1,0 +1,118 @@
+<html lang="en">
+  <head>
+    <script
+      src="https://www.gstatic.com/firebasejs/8.0.2/firebase-app.js"
+    ></script>
+    <script
+      src="https://www.gstatic.com/firebasejs/8.0.2/firebase-auth.js"
+    ></script>
+    <script
+      src="https://www.gstatic.com/firebasejs/8.0.2/firebase-storage.js"
+    ></script>
+    <script
+      src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"
+    ></script>
+    <script
+      src="https://kit.fontawesome.com/dd084b05a9.js"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" src="/script.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+  </head>
+  <body>
+    <section class="hero is-info mb-4">
+      <div class="hero-body">
+        <p class="title">
+          Commute Chronology Assistant
+          <i class="pl-2 fa-solid fa-business-time"></i>
+        </p>
+      </div>
+    </section>
+    <div class="tile is-ancestor">
+      <div class="tile is-vertical is-8">
+        <div class="tile">
+          <div class="tile is-parent is-vertical">
+        <article class="tile is-child notification is-info">
+          <div class="container">
+            <p class="title">About <i class="pl-2 fa-solid fa-book"></i></p>
+            <div class="content has-text-justified">
+              <p>
+                The Commute Chronology Assistant is a tool to help those who
+                have difficulty with time awareness arrive in work on time. It
+                uses a mixture of visual aids in the home and push notifications
+                on a smartphone to provide real-time updates on the user's
+                commute. The details are then stored and used in future commutes
+                to ensure the user is appropriately prompted to arrive on time.
+                <br />
+                <br />
+                This version is a prototype built for a project on the hDip in
+                Computer Science in the South East Technological University in
+                Ireland. For the full downloadable project and supporting
+                materials, please clink the link in the "repository" section of
+                the page
+                <br>
+                <br>
+                If you have the required technology and wish to get your own version
+                of the application up and running, please see the installation guide
+                on the right of this page. It is available as pdf in-site or as download
+                via the button.
+              </p>
+            </div>
+          </div>
+        </article>
+            <article class="tile is-child notification is-info">
+              <p class="title">Repository and Additional Links
+                <i class="pl-2 fa-brands fa-github"></i></p>
+              <p>
+                <a
+                  href="https://github.com/chipspeak/compSysAssignment2"
+                >GitHub Repo</a>
+                - access the project files
+              </p>
+              <br>
+              <ul>
+                <li><a href="https://www.raspberrypi.com/documentation/computers/getting-started.html">Rasberry Pi Documentation</a> - used to run application</li>
+                <br>
+                <li><a href="https://www.raspberrypi.com/documentation/accessories/sense-hat.html">Sense HAT Documentation</a> - used to display ETA</li>
+                <br>
+                <li><a href="https://developers.meethue.com/">Philips Hue Developers Site</a> - used to set lamp colour based on ETA</li>
+                <br>
+                <li><a href="https://developers.google.com/maps">Google Maps API</a> - used to retrieve ETA based on locations</li>
+                <br>
+                <li><a href="https://firebase.google.com/">Firebase</a> - used to store data in realtime DB and retrieve on this site</li>
+                <br>
+                <li><a href="https://blynk.io/">Blynk</a> - used to push notifications to users phone based on journey status</li>
+                <br>
+              </ul>
+            </article>
+          </div>
+          <div class="tile is-parent">
+            <article class="tile is-child notification is-info">
+              <h1 class="title">Recent Journeys
+                <i class="pl-2 fa-solid fa-map-location-dot"></i></h1>
+              <div id="dataContainer"> <! -- this is the dataContainer into which the formatted entries are placed -->
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+      <div class="tile is-parent">
+        <article class="tile is-child notification is-info">
+          <p class="title">Installation Guide<i class="pl-2 fa-solid fa-computer"></i></p>
+          <ul>
+            <li>
+              <iframe
+                src="https://drive.google.com/viewerng/viewer?embedded=true&url=https://drive.google.com/uc?id=1IGXDqtpRckR9gRl9usv3qMvzEk1wtyla"
+                width="100%"
+                height="975"
+              ></iframe>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </body>
+</html>
