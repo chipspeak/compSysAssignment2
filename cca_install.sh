@@ -6,7 +6,7 @@ installSystemPackages() {
     sudo apt-get install -y python3 python3-pip
 }
 
-# Function to use pip install -r to install the contents of the requirements.txt script
+# Function to use pip install -r to install the contents of the requirements.txt file
 installPythonPackages() {
     pip install -r requirements.txt
 }
