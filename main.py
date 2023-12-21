@@ -33,9 +33,6 @@ red = (255,0,0)
 yellow = (255, 255, 0)
 blue = (0,0,200)
 
-# array to which the difference between actual departure time and desired departure time is passed. The average of the array contents will be added to timeInSeconds and duration in traffic.
-averageDelay = []
-
 # api call
 apiUrl = f'https://maps.googleapis.com/maps/api/distancematrix/json?origins={origin}&destinations={destination}&key={apiKey}&departure_time=now'
 
